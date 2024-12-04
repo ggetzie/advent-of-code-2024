@@ -5,7 +5,6 @@ using namespace std;
 
 bool isSafe(vector<int> report) {
   // calculate the differences between the numbers
-
   int difference = report[1] - report[0];
   bool increasing = difference > 0;
   if (abs(difference) > 3 || abs(difference) == 0) {
@@ -22,6 +21,27 @@ bool isSafe(vector<int> report) {
   }
   return true;
 }
+
+bool dampenedSafe(vector<int> report) {
+  bool safe = isSafe(report);
+  if (safe) {
+    return true;
+  }
+  // check if the report is safe with each number removed
+  for (int i = 0; i < report.size(); i++) {
+    vector<int> dampenedReport;
+    for (int j = 0; j < report.size(); j++) {
+      if (j != i) {
+        dampenedReport.push_back(report[j]);
+      }
+    }
+    if (isSafe(dampenedReport)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void printReport(vector<int> report) {
   cout << "[";
   for (int num : report) {
@@ -29,10 +49,16 @@ void printReport(vector<int> report) {
   }
   cout << "]";
 }
-int main() {
+int main(int argc, char **argv) {
+  // get filename from args
+  if (argc != 2) {
+    cerr << "Usage: " << argv[0] << " <filename>" << endl;
+    return 1;
+  }
+
   vector<int> report;
   int number;
-  ifstream inputFile("input.txt");
+  ifstream inputFile(argv[1]);
   if (!inputFile) {
     cerr << "Could not open the file!" << endl;
     return 1;
@@ -43,10 +69,7 @@ int main() {
   while (inputFile >> number) {
     report.push_back(number);
     if (inputFile.peek() == '\n') {
-      // cout << "Report: ";
-      // printReport(report);
-      bool safe = isSafe(report);
-      // cout << " is " << (safe ? "safe" : "unsafe") << endl;
+      bool safe = dampenedSafe(report);
       if (safe) {
         safeReports++;
       }
