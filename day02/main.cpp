@@ -45,7 +45,10 @@ bool dampenedSafe(vector<int> report) {
 void printReport(vector<int> report) {
   cout << "[";
   for (int num : report) {
-    cout << num << " ";
+    cout << num;
+    if (num != report.back()) {
+      cout << ", ";
+    }
   }
   cout << "]";
 }
