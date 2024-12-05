@@ -10,21 +10,21 @@ int main() {
   }
   enum class State {
     base,
-    found_m,
-    found_mu,
-    found_mul,
-    found_mul_op,  // found mul(
-    found_num1,
-    found_comma,
-    found_num2,
-    found_d,
-    found_do,
-    found_do_op,  // found do(
-    found_don,
-    found_don_tick,       // found don'
-    found_don_tick_t,     // found don't
-    found_don_tick_t_op,  // found don't(
-    found_dont            // found don't()
+    m,
+    mu,
+    mul,
+    mul_op,  // found mul(
+    num1,
+    comma,
+    num2,
+    d,
+    do_,
+    do_op,  // found do(
+    don,
+    don_tick,       // found don'
+    don_tick_t,     // found don't
+    don_tick_t_op,  // found don't(
+    dont            // found don't()
   };
   State state = State::base;
   string num1_buffer = "";
@@ -36,76 +36,76 @@ int main() {
     switch (state) {
       case State::base:
         if (next_c == 'm') {
-          state = State::found_m;
+          state = State::m;
         } else if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
         }
         break;
-      case State::found_m:
+      case State::m:
         if (next_c == 'u') {
-          state = State::found_mu;
+          state = State::mu;
         } else if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
         } else {
           state = State::base;
         }
         break;
-      case State::found_mu:
+      case State::mu:
         if (next_c == 'l') {
-          state = State::found_mul;
+          state = State::mul;
         } else if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
         } else {
           state = State::base;
         }
         break;
-      case State::found_mul:
+      case State::mul:
         if (next_c == '(') {
-          state = State::found_mul_op;
+          state = State::mul_op;
         } else if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
         } else {
           state = State::base;
         }
         break;
-      case State::found_mul_op:
+      case State::mul_op:
         // if next_c is a digit, add it to num1_buffer
         if (isdigit(next_c)) {
           num1_buffer += next_c;
-          state = State::found_num1;
+          state = State::num1;
         } else if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
         }
         break;
-      case State::found_num1:
+      case State::num1:
         // if next_c is a digit, add it to num1_buffer
         if (isdigit(next_c)) {
           num1_buffer += next_c;
         } else if (next_c == ',') {
-          state = State::found_comma;
+          state = State::comma;
           num1 = stoi(num1_buffer);
           num1_buffer = "";
         } else if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
           num1_buffer = "";
         } else {
           state = State::base;
           num1_buffer = "";
         }
         break;
-      case State::found_comma:
+      case State::comma:
         // if next_c is a digit, add it to num2_buffer
         if (isdigit(next_c)) {
           num2_buffer += next_c;
-          state = State::found_num2;
+          state = State::num2;
         } else if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
         } else {
           state = State::base;
           num2_buffer = "";
         }
         break;
-      case State::found_num2:
+      case State::num2:
         // if next_c is a digit, add it to num2_buffer
         if (isdigit(next_c)) {
           num2_buffer += next_c;
@@ -115,79 +115,79 @@ int main() {
           total += num1 * num2;
           num2_buffer = "";
         } else if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
           num2_buffer = "";
         } else {
           state = State::base;
           num2_buffer = "";
         }
         break;
-      case State::found_d:
+      case State::d:
         if (next_c == 'o') {
-          state = State::found_do;
+          state = State::do_;
         } else {
-          if (state != State::found_dont) {
+          if (state != State::dont) {
             state = State::base;
           }
         }
         break;
-      case State::found_do:
+      case State::do_:
         if (next_c == 'n') {
-          state = State::found_don;
+          state = State::don;
         } else if (next_c == '(') {
-          state = State::found_do_op;
+          state = State::do_op;
         } else {
-          if (state != State::found_dont) {
+          if (state != State::dont) {
             state = State::base;
           }
         }
         break;
-      case State::found_don:
+      case State::don:
         if (next_c == '\'') {
-          state = State::found_don_tick;
+          state = State::don_tick;
         } else {
-          if (state != State::found_dont) {
+          if (state != State::dont) {
             state = State::base;
           }
         }
         break;
-      case State::found_don_tick:
+      case State::don_tick:
         if (next_c == 't') {
-          state = State::found_don_tick_t;
+          state = State::don_tick_t;
         } else {
-          if (state != State::found_dont) {
+          if (state != State::dont) {
             state = State::base;
           }
         }
         break;
-      case State::found_don_tick_t:
+      case State::don_tick_t:
         if (next_c == '(') {
-          state = State::found_don_tick_t_op;
+          state = State::don_tick_t_op;
         } else {
-          if (state != State::found_dont) {
+          if (state != State::dont) {
             state = State::base;
           }
         }
         break;
-      case State::found_don_tick_t_op:
+      case State::don_tick_t_op:
         if (next_c == ')') {
-          state = State::found_dont;
+          state = State::dont;
         } else {
-          if (state != State::found_dont) {
+          if (state != State::dont) {
             state = State::base;
           }
         }
         break;
-      case State::found_dont:
+      case State::dont:
         if (next_c == 'd') {
-          state = State::found_d;
+          state = State::d;
         }
         break;
-      case State::found_do_op:
+      case State::do_op:
         if (next_c == ')') {
           state = State::base;
         } else {
-          if (state != State::found_dont) {
+          if (state != State::dont) {
             state = State::base;
           }
         }
