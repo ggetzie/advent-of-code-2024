@@ -70,20 +70,22 @@ int main() {
         }
         break;
       case State::mul_op:
-        // if next_c is a digit, add it to num1_buffer
         if (isdigit(next_c)) {
+          // start collecting num1
           num1_buffer += next_c;
           state = State::num1;
         } else if (next_c == 'd') {
+          // possible start of do() or don't()
           state = State::d;
         } else {
+          // we got mul( but no digit, so reset
           state = State::base;
           num1_buffer = "";
         }
         break;
       case State::num1:
-        // if next_c is a digit, add it to num1_buffer
         if (isdigit(next_c)) {
+          // more digits
           num1_buffer += next_c;
         } else if (next_c == ',') {
           // finished collecting num1
@@ -91,9 +93,11 @@ int main() {
           num1 = stoi(num1_buffer);
           num1_buffer = "";
         } else if (next_c == 'd') {
+          // possible start of do() or don't()
           state = State::d;
           num1_buffer = "";
         } else {
+          // malformed mul() expression
           state = State::base;
           num1_buffer = "";
         }
@@ -105,14 +109,17 @@ int main() {
           num2_buffer += next_c;
           state = State::num2;
         } else if (next_c == 'd') {
+          // possible start of do() or don't()
           state = State::d;
         } else {
+          // malformed mul() expression
           state = State::base;
           num2_buffer = "";
         }
         break;
       case State::num2:
         if (isdigit(next_c)) {
+          // more digits
           num2_buffer += next_c;
         } else if (next_c == ')') {
           // finished num2. Multiply and add to total
@@ -121,9 +128,11 @@ int main() {
           total += num1 * num2;
           num2_buffer = "";
         } else if (next_c == 'd') {
+          // possible start of do() or don't()
           state = State::d;
           num2_buffer = "";
         } else {
+          // malformed mul() expression
           state = State::base;
           num2_buffer = "";
         }
@@ -132,6 +141,8 @@ int main() {
         if (next_c == 'o') {
           state = State::do_;
         } else {
+          // not a do() or don't() expression
+          // return to base unless we are in a don't() state
           if (state != State::dont) {
             state = State::base;
           }
@@ -143,6 +154,8 @@ int main() {
         } else if (next_c == '(') {
           state = State::do_op;
         } else {
+          // not a do() or don't() expression
+          // return to base unless we are in a don't() state
           if (state != State::dont) {
             state = State::base;
           }
@@ -152,6 +165,7 @@ int main() {
         if (next_c == '\'') {
           state = State::don_tick;
         } else {
+          // not a don't() expression
           if (state != State::dont) {
             state = State::base;
           }
@@ -177,6 +191,7 @@ int main() {
         break;
       case State::don_tick_t_op:
         if (next_c == ')') {
+          // entered don't() state
           state = State::dont;
         } else {
           if (state != State::dont) {
@@ -186,8 +201,10 @@ int main() {
         break;
       case State::dont:
         if (next_c == 'd') {
+          // possible start of do() expression to resume computation
           state = State::d;
         }
+        // otherwise, stay in don't() state
         break;
       case State::do_op:
         if (next_c == ')') {
