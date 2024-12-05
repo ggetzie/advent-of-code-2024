@@ -76,6 +76,9 @@ int main() {
           state = State::num1;
         } else if (next_c == 'd') {
           state = State::d;
+        } else {
+          state = State::base;
+          num1_buffer = "";
         }
         break;
       case State::num1:
@@ -83,6 +86,7 @@ int main() {
         if (isdigit(next_c)) {
           num1_buffer += next_c;
         } else if (next_c == ',') {
+          // finished collecting num1
           state = State::comma;
           num1 = stoi(num1_buffer);
           num1_buffer = "";
@@ -97,6 +101,7 @@ int main() {
       case State::comma:
         // if next_c is a digit, add it to num2_buffer
         if (isdigit(next_c)) {
+          // start collecting num2
           num2_buffer += next_c;
           state = State::num2;
         } else if (next_c == 'd') {
@@ -107,10 +112,10 @@ int main() {
         }
         break;
       case State::num2:
-        // if next_c is a digit, add it to num2_buffer
         if (isdigit(next_c)) {
           num2_buffer += next_c;
         } else if (next_c == ')') {
+          // finished num2. Multiply and add to total
           state = State::base;
           num2 = stoi(num2_buffer);
           total += num1 * num2;
