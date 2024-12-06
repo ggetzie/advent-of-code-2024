@@ -120,14 +120,67 @@ int checkNE(const Grid& grid, int row, int col) {
   return 1;
 }
 
+int countXmas(const Grid& grid) {
+  int xmasCount = 0;
+  for (int i = 0; i < grid.size(); i++) {
+    for (int j = 0; j < grid[0].size(); j++) {
+      xmasCount +=
+          (checkN(grid, i, j) + checkNW(grid, i, j) + checkW(grid, i, j) +
+           checkSW(grid, i, j) + checkS(grid, i, j) + checkSE(grid, i, j) +
+           checkE(grid, i, j) + checkNE(grid, i, j));
+    }
+  }
+  return xmasCount;
+}
+
+int checkX_Mas(const Grid& grid, int row, int col) {
+  // check if there is M A S in an X form going right and down from row, col
+  // can also be reversed so
+  // M M       S S     M S     S M
+  //  A   and   A  and  A  and  A   are all valid
+  // S S       M M     M S     S M
+  if (row + 2 >= grid.size() || col + 2 >= grid[0].size()) {
+    return 0;
+  }
+
+  char middle = grid[row + 1][col + 1];
+  if (middle != 'A') {
+    return 0;
+  }
+  char topLeft = grid[row][col];
+  char topRight = grid[row][col + 2];
+  char bottomLeft = grid[row + 2][col];
+  char bottomRight = grid[row + 2][col + 2];
+
+  bool upright = topLeft == 'M' && topRight == 'M' && bottomLeft == 'S' &&
+                 bottomRight == 'S';
+  bool flipped = topLeft == 'S' && topRight == 'S' && bottomLeft == 'M' &&
+                 bottomRight == 'M';
+  bool left = topLeft == 'M' && bottomLeft == 'M' && topRight == 'S' &&
+              bottomRight == 'S';
+  bool right = topLeft == 'S' && bottomLeft == 'S' && topRight == 'M' &&
+               bottomRight == 'M';
+  return int(upright || flipped || left || right);
+}
+
+int countX_Mas(const Grid& grid) {
+  int X_MasCount = 0;
+  for (int i = 0; i < grid.size(); i++) {
+    for (int j = 0; j < grid[0].size(); j++) {
+      X_MasCount += checkX_Mas(grid, i, j);
+    }
+  }
+  return X_MasCount;
+}
+
 int main(int argc, char* argv[]) {
   if (argc != 2) {
     cerr << "Usage: " << argv[0] << " <input file>" << endl;
     return 1;
   }
   ifstream inputFile(argv[1]);
-  if (!inputFile) {
-    cerr << "Error opening file" << endl;
+  if (!inputFile.is_open()) {
+    cerr << "Error opening file: " << argv[1] << endl;
     return 1;
   }
   Grid letterGrid;
@@ -138,17 +191,11 @@ int main(int argc, char* argv[]) {
     letterGrid.push_back(row);
   }
 
-  int xmasCount = 0;
-  for (int i = 0; i < letterGrid.size(); i++) {
-    for (int j = 0; j < letterGrid[0].size(); j++) {
-      xmasCount += (checkN(letterGrid, i, j) + checkNW(letterGrid, i, j) +
-                    checkW(letterGrid, i, j) + checkSW(letterGrid, i, j) +
-                    checkS(letterGrid, i, j) + checkSE(letterGrid, i, j) +
-                    checkE(letterGrid, i, j) + checkNE(letterGrid, i, j));
-    }
-  }
+  int xmasCount = countXmas(letterGrid);
+  int X_MasCount = countX_Mas(letterGrid);
 
   cout << "XMAS count: " << xmasCount << endl;
+  cout << "X_Mas count: " << X_MasCount << endl;
 
   return 0;
 }
