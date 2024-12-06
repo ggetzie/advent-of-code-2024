@@ -55,7 +55,7 @@ int checkW(const Grid& grid, int row, int col) {
   return 1;
 }
 
-bool checkSW(const Grid& grid, int row, int col) {
+int checkSW(const Grid& grid, int row, int col) {
   // check if we can spell XMAS going down and to the left from row, col
   if (row + 3 >= grid.size() || col - 3 < 0) {
     return 0;
@@ -68,7 +68,7 @@ bool checkSW(const Grid& grid, int row, int col) {
   return 1;
 }
 
-bool checkS(const Grid& grid, int row, int col) {
+int checkS(const Grid& grid, int row, int col) {
   // check if we can spell XMAS going down from row, col
   if (row + 3 >= grid.size()) {
     return 0;
@@ -81,7 +81,7 @@ bool checkS(const Grid& grid, int row, int col) {
   return 1;
 }
 
-bool checkSE(const Grid& grid, int row, int col) {
+int checkSE(const Grid& grid, int row, int col) {
   // check if we can spell XMAS going down and to the right from row, col
   if (row + 3 >= grid.size() || col + 3 >= grid[0].size()) {
     return 0;
@@ -94,7 +94,7 @@ bool checkSE(const Grid& grid, int row, int col) {
   return 1;
 }
 
-bool checkE(const Grid& grid, int row, int col) {
+int checkE(const Grid& grid, int row, int col) {
   // check if we can spell XMAS going to the right from row, col
   if (col + 3 >= grid[0].size()) {
     return 0;
@@ -107,7 +107,7 @@ bool checkE(const Grid& grid, int row, int col) {
   return 1;
 }
 
-bool checkNE(const Grid& grid, int row, int col) {
+int checkNE(const Grid& grid, int row, int col) {
   // check if we can spell XMAS going up and to the right from row, col
   if (row - 3 < 0 || col + 3 >= grid[0].size()) {
     return 0;
