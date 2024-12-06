@@ -7,15 +7,6 @@ using namespace std;
 
 typedef vector<vector<char>> Grid;
 
-void printGrid(const Grid& grid) {
-  for (const auto& row : grid) {
-    for (int i = 0; i < row.size(); i++) {
-      cout << row[i];
-    }
-    cout << endl;
-  }
-}
-
 int checkN(const Grid& grid, int row, int col) {
   // check if we can spell XMAS going up from row, col
   if (row - 3 < 0) {
@@ -120,20 +111,19 @@ int checkNE(const Grid& grid, int row, int col) {
   return 1;
 }
 
-int countXmas(const Grid& grid) {
-  int xmasCount = 0;
+int countXMAS(const Grid& grid) {
+  int count = 0;
   for (int i = 0; i < grid.size(); i++) {
     for (int j = 0; j < grid[0].size(); j++) {
-      xmasCount +=
-          (checkN(grid, i, j) + checkNW(grid, i, j) + checkW(grid, i, j) +
-           checkSW(grid, i, j) + checkS(grid, i, j) + checkSE(grid, i, j) +
-           checkE(grid, i, j) + checkNE(grid, i, j));
+      count += (checkN(grid, i, j) + checkNW(grid, i, j) + checkW(grid, i, j) +
+                checkSW(grid, i, j) + checkS(grid, i, j) + checkSE(grid, i, j) +
+                checkE(grid, i, j) + checkNE(grid, i, j));
     }
   }
-  return xmasCount;
+  return count;
 }
 
-int checkX_Mas(const Grid& grid, int row, int col) {
+int checkX_MAS(const Grid& grid, int row, int col) {
   // check if there is M A S in an X form going right and down from row, col
   // can also be reversed so
   // M M       S S     M S     S M
@@ -163,14 +153,14 @@ int checkX_Mas(const Grid& grid, int row, int col) {
   return int(upright || flipped || left || right);
 }
 
-int countX_Mas(const Grid& grid) {
-  int X_MasCount = 0;
+int countX_MAS(const Grid& grid) {
+  int count = 0;
   for (int i = 0; i < grid.size(); i++) {
     for (int j = 0; j < grid[0].size(); j++) {
-      X_MasCount += checkX_Mas(grid, i, j);
+      count += checkX_MAS(grid, i, j);
     }
   }
-  return X_MasCount;
+  return count;
 }
 
 int main(int argc, char* argv[]) {
@@ -191,11 +181,11 @@ int main(int argc, char* argv[]) {
     letterGrid.push_back(row);
   }
 
-  int xmasCount = countXmas(letterGrid);
-  int X_MasCount = countX_Mas(letterGrid);
+  int XMASCount = countXMAS(letterGrid);
+  int X_MASCount = countX_MAS(letterGrid);
 
-  cout << "XMAS count: " << xmasCount << endl;
-  cout << "X_Mas count: " << X_MasCount << endl;
+  cout << "XMAS count: " << XMASCount << endl;
+  cout << "X_MAS count: " << X_MASCount << endl;
 
   return 0;
 }
